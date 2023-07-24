@@ -22,6 +22,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-modules-
 
+      # Add this step to list the contents of the ~/.npm directory
+      - name: List ~/.npm contents
+        run: ls -la ~/.npm
+
+      # Add this step to verify if the cache is a hit or miss
+      - name: Verify cache status
+        run: echo ${{ steps.cache-node-modules.outputs.cache-hit }}
+
       - name: Setup Node
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         uses: actions/setup-node@v2
