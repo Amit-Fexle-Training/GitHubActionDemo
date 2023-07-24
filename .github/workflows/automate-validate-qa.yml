@@ -1,5 +1,9 @@
 name: Validate Changes
-on: workflow_dispatch
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - QA
 jobs:
   validate:
     runs-on: ubuntu-latest
