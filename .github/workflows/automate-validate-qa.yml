@@ -18,7 +18,22 @@ jobs:
         with:
           node-version: "16.x"
             
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+        
+      - name: check cache
+        uses: actions/cache@v3
+        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+          
       - name: Install Dependencies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
         run: |
           npm install sfdx-cli --global
           echo y | sfdx plugins:install sfdx-git-delta
