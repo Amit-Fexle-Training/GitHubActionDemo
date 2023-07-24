@@ -40,6 +40,12 @@ jobs:
 
       - name: Print npm cache directory
         run: echo "npm cache directory:$(npm config get cache)"
+        
+      - name: Print _cacache directory
+        run: echo "_cacache directory:$(npm config get cache)/_cacache"
+        
+      - name: Print cacache List
+        run: npm cache ls
 
       - name: List npm cache contents
         run: ls -la $(npm config get cache)
