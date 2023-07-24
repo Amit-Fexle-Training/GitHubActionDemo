@@ -36,6 +36,11 @@ jobs:
           npm install sfdx-cli --global
           echo y | sfdx plugins:install sfdx-git-delta
           sfdx plugins
+          
+      - name: Install Dependencies
+        run: |
+          echo y | sfdx plugins:install sfdx-git-delta
+          sfdx plugins
 
       - name: 'Populate auth file with QA_AUTH_URL secret'
         shell: bash
