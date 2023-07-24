@@ -11,33 +11,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
-
-      - name: Cache node modules
-        id: cache-node-modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-
-
-      # Add this step to list the contents of the ~/.npm directory
-      - name: List ~/.npm contents
-        run: ls -la ~/.npm
-
-      # Add this step to verify if the cache is a hit or miss
-      - name: Verify cache status
-        run: echo ${{ steps.cache-node-modules.outputs.cache-hit }}
+         fetch-depth: 0
 
       - name: Setup Node
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         uses: actions/setup-node@v2
         with:
           node-version: "16.x"
-                
+            
       - name: Install Dependencies
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: |
           npm install sfdx-cli --global
           echo y | sfdx plugins:install sfdx-git-delta
@@ -46,12 +27,12 @@ jobs:
       - name: 'Populate auth file with QA_AUTH_URL secret'
         shell: bash
         run: |
-          echo ${{ secrets.QA_AUTH_URL }} > ./QA_AUTH_URL.txt
-          secretFileSize=$(wc -c "./QA_AUTH_URL.txt" | awk '{print $1}')
-          if [ $secretFileSize == 1 ]; then
-            echo "Missing QA_AUTH_URL secret. Is this workflow running on a fork?";
-            exit 1;
-          fi
+            echo ${{ secrets.QA_AUTH_URL}} > ./QA_AUTH_URL.txt
+            secretFileSize=$(wc -c "./QA_AUTH_URL.txt" | awk '{print $1}')
+            if [ $secretFileSize == 1 ]; then
+                echo "Missing QA_AUTH_URL secret. Is this workflow running on a fork?";
+                exit 1;
+            fi
       
       - name: Authenticate with QA 
         run: |
